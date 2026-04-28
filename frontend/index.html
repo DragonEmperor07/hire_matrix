@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireMatrix — Hiring driven by skill, not bias</title>
+  <link rel="stylesheet" href="static/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff8a3d'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='-apple-system,system-ui' font-size='36' font-weight='700' fill='white'%3EH%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- Ambient glow blobs (Poseify-style hero ambience) -->
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="glow glow-3"></div>
+
+  <!-- Welcome popup: ask for user's name -->
+  <div class="name-overlay" id="nameOverlay">
+    <div class="name-card">
+      <div class="logo">HireMatrix</div>
+      <div class="tagline">Hiring driven by skill, not bias</div>
+      <h2>What should we call you?</h2>
+      <input id="nameInput" type="text" placeholder="Your name" autocomplete="given-name" />
+      <button id="nameSubmit">Enter HireMatrix</button>
+      <div class="hint">Your name stays in this browser — no account, no tracking.</div>
+    </div>
+  </div>
+
+  <!-- Top nav -->
+  <nav class="topbar">
+    <div class="brand">HireMatrix</div>
+    <div class="nav">
+      <a href="#home" data-nav="home" class="active"><span class="label">Home</span></a>
+      <a href="#about" data-nav="about"><span class="label">About</span></a>
+      <div class="nav-services" id="servicesNav">
+        <a href="#services" data-nav="services"><span class="label">Services</span></a>
+        <div class="dropdown">
+          <a href="#detect-bias">Detect Bias<small>Find disparate impact in a dataset</small></a>
+          <a href="#shortlist">Shortlist Candidates<small>Reweight + CatBoost ranking</small></a>
+          <a href="#process">Process Candidates<small>Resume → questions → score</small></a>
+          <a href="#review">Candidate Review<small>Compare cohort, run fairness</small></a>
+        </div>
+      </div>
+    </div>
+    <div class="user-chip" id="userChip" style="display:none;">
+      <div class="avatar" id="userAvatar">A</div>
+      <span class="name" id="userName">Guest</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ─────────── HOME ─────────── -->
+    <section id="home" class="section home">
+      <div class="welcome">Welcome <span id="welcomeName">there</span></div>
+      <div class="brand-name">HireMatrix</div>
+      <p class="quote">
+        “Hiring should be driven by <strong>skill, not bias</strong>.
+        We make that <strong>measurable</strong>.”
+      </p>
+      <div class="cta">
+        <a href="#services" class="btn lg" data-nav="services">Explore Services</a>
+        <a href="#about" class="btn ghost lg" data-nav="about">Learn More</a>
+      </div>
+      <div class="scroll-cue">Scroll ↓</div>
+    </section>
+
+    <!-- ─────────── ABOUT ─────────── -->
+    <section id="about" class="section about">
+      <div class="row">
+        <div class="left">
+          <div class="badge">About Us</div>
+          <h2>ABOUT US</h2>
+        </div>
+        <div class="right">
+          <p>
+            HireMatrix is an intelligent hiring platform that evaluates candidates end-to-end —
+            from resume analysis to interview scoring. Using AI-driven insights, it assesses
+            technical skills, communication, and consistency while ensuring fairness through
+            bias auditing. Our goal is to make hiring faster, more objective, and explainable.
+          </p>
+        </div>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <div class="icon">⚖️</div>
+          <h4>Bias Detection</h4>
+          <p>Disparate-impact analysis grounded in EEOC's four-fifths rule.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">📊</div>
+          <h4>Fair Shortlisting</h4>
+          <p>Reweighting + CatBoost ranking with built-in fairness audits.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🎙️</div>
+          <h4>Interview Scoring</h4>
+          <p>Resume parsing, question gen, audio scoring, AI-likeness detection.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">📋</div>
+          <h4>Cohort Review</h4>
+          <p>Compare candidates side-by-side with optional fairness audit.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────── SERVICES ─────────── -->
+    <section id="services" class="section services">
+      <div class="services-head">
+        <div class="left">
+          <div class="badge">Services</div>
+          <h2>OUR SERVICES</h2>
+        </div>
+        <div class="right">
+          The four pillars of fair hiring — each one runs locally on your data,
+          producing recruiter-friendly reports backed by transparent metrics.
+          Click a tab to jump straight to it, or just scroll.
+        </div>
+      </div>
+
+      <div class="services-tabs">
+        <button data-jump="detect-bias" class="active">Detect Bias</button>
+        <button data-jump="shortlist">Shortlist Candidates</button>
+        <button data-jump="process">Process Candidates</button>
+        <button data-jump="review">Candidate Review</button>
+      </div>
+
+      <!-- ───── DETECT BIAS ───── -->
+      <div id="detect-bias" class="service-card">
+        <div class="head">
+          <div class="meta">
+            <div class="pill">Service 01</div>
+            <div>Disparate-impact analysis on any tabular dataset.</div>
+            <div class="stack">// solution.py</div>
+          </div>
+          <div class="right">
+            <h3>Detect Bias</h3>
+            <p>
+              Upload a CSV — we'll flag systemic gender bias overall and inside each occupation,
+              return the EEOC four-fifths score, and tell you whether the disparity is genuine
+              discrimination or just occupational segregation.
+            </p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label class="upload-zone" id="biasUpload">
+            <div class="ico">📂</div>
+            <div class="label">Drop a CSV here</div>
+            <div class="hint">or click to browse</div>
+            <input type="file" accept=".csv" id="biasFile" />
+          </label>
+          <div>
+            <div class="field">
+              <label>Try a sample dataset</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn subtle sm" data-sample="adult.csv" data-target="bias">UCI Adult Income</button>
+                <button class="btn subtle sm" data-sample="attrition.csv" data-target="bias">IBM HR Attrition</button>
+              </div>
+              <p class="hint" style="margin-top:8px; font-size:12px; color:var(--muted);">
+                Don't have a dataset on hand? Try one of the bundled samples to see Detect Bias in action.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="biasFormWrap" style="display:none; margin-top:24px;">
+          <div class="form-grid">
+            <div class="field"><label>Gender column</label><select id="biasGender"></select></div>
+            <div class="field"><label>Target column</label><select id="biasTarget"></select></div>
+            <div class="field"><label>Positive value</label><input id="biasPositive" placeholder=">50K" /></div>
+            <div class="field"><label>Occupation column</label><select id="biasOccupation"></select></div>
+          </div>
+          <div class="row-actions">
+            <button class="btn ghost" id="biasReset">Reset</button>
+            <button class="btn" id="biasRun">Run Bias Audit</button>
+          </div>
+        </div>
+
+        <div id="biasResults" style="display:none; margin-top:24px;"></div>
+      </div>
+
+      <!-- ───── SHORTLIST ───── -->
+      <div id="shortlist" class="service-card">
+        <div class="head">
+          <div class="meta">
+            <div class="pill">Service 02</div>
+            <div>Fairness reweighting + CatBoost ranking, by occupation.</div>
+            <div class="stack">// reweight.py · catshortlist.py</div>
+          </div>
+          <div class="right">
+            <h3>Shortlist Candidates</h3>
+            <p>
+              Upload a candidate CSV. We'll first check whether reweighting is necessary,
+              then train a CatBoost ranker. Pick the occupation you're hiring for, set a
+              shortlist size, and get a fairness-audited list with full feature attribution.
+            </p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label class="upload-zone" id="shortlistUpload">
+            <div class="ico">📂</div>
+            <div class="label">Drop a CSV here</div>
+            <div class="hint">or click to browse</div>
+            <input type="file" accept=".csv" id="shortlistFile" />
+          </label>
+          <div>
+            <div class="field">
+              <label>Try a sample dataset</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn subtle sm" data-sample="adult.csv" data-target="shortlist">UCI Adult Income</button>
+                <button class="btn subtle sm" data-sample="attrition.csv" data-target="shortlist">IBM HR Attrition</button>
+              </div>
+              <p class="hint" style="margin-top:8px; font-size:12px; color:var(--muted);">
+                Same samples — try them if you want a quick demo run.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="shortlistFormWrap" style="display:none; margin-top:24px;">
+          <div class="form-grid">
+            <div class="field"><label>Gender column</label><select id="slGender"></select></div>
+            <div class="field"><label>Target column</label><select id="slTarget"></select></div>
+            <div class="field"><label>Positive value</label><input id="slPositive" placeholder=">50K" /></div>
+            <div class="field"><label>Occupation column</label><select id="slOccupation"></select></div>
+          </div>
+
+          <div class="row-actions">
+            <button class="btn ghost" id="slCheckReweight">1. Check if Reweighting Needed</button>
+          </div>
+
+          <div id="slReweightResult" style="display:none; margin-top:18px;"></div>
+
+          <div id="slShortlistForm" style="display:none; margin-top:24px;">
+            <div class="form-grid">
+              <div class="field"><label>Hire for which occupation?</label><select id="slTargetOcc"></select></div>
+              <div class="field"><label>Shortlist size</label><input id="slTopN" type="number" value="50" min="5" /></div>
+            </div>
+            <div class="row-actions">
+              <button class="btn" id="slRun">2. Run CatBoost Shortlist</button>
+            </div>
+          </div>
+
+          <div id="slResults" style="display:none; margin-top:24px;"></div>
+        </div>
+      </div>
+
+      <!-- ───── PROCESS CANDIDATES ───── -->
+      <div id="process" class="service-card">
+        <div class="head">
+          <div class="meta">
+            <div class="pill">Service 03</div>
+            <div>End-to-end interview pipeline.</div>
+            <div class="stack">// cv_extractor.py · generate_question.py<br>// transcriptions_pro.py · score.py · aggregrate.py<br>// Interview pipeline.py</div>
+          </div>
+          <div class="right">
+            <h3>Process Candidates</h3>
+            <p>
+              Walk a single candidate through the full pipeline: parse the resume, generate
+              tailored interview questions, capture answers (audio or text), grade each one
+              with feedback and AI-likeness detection, then assemble a recruiter-ready report.
+            </p>
+          </div>
+        </div>
+
+        <div class="wizard-steps" id="wizardSteps">
+          <div class="step active" data-step="1"><span class="num">1</span>Resume</div>
+          <span class="arrow">→</span>
+          <div class="step" data-step="2"><span class="num">2</span>Questions</div>
+          <span class="arrow">→</span>
+          <div class="step" data-step="3"><span class="num">3</span>Interview</div>
+          <span class="arrow">→</span>
+          <div class="step" data-step="4"><span class="num">4</span>Score</div>
+          <span class="arrow">→</span>
+          <div class="step" data-step="5"><span class="num">5</span>Report</div>
+        </div>
+
+        <!-- STAGE 1: Resume upload -->
+        <div class="wizard-stage active" data-stage="1">
+          <label class="upload-zone" id="cvUpload">
+            <div class="ico">📄</div>
+            <div class="label">Upload candidate resume (PDF)</div>
+            <div class="hint">cv_extractor.py will parse it into structured fields</div>
+            <input type="file" accept=".pdf" id="cvFile" />
+          </label>
+          <div id="cvSummary" style="display:none; margin-top:20px;"></div>
+          <div class="wizard-actions">
+            <div class="left"></div>
+            <div class="right">
+              <button class="btn" id="cvNext" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 2: Question generation -->
+        <div class="wizard-stage" data-stage="2">
+          <div class="form-grid">
+            <div class="field"><label>Job role</label><input id="qJobRole" placeholder="Software Engineer" /></div>
+            <div class="field">
+              <label>Difficulty</label>
+              <select id="qDifficulty">
+                <option value="junior level - fundamentals and learning attitude">Junior</option>
+                <option value="mid level - practical experience and code quality" selected>Mid-level</option>
+                <option value="senior level - architecture, trade-offs, and leadership">Senior</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Style</label>
+              <select id="qStyle">
+                <option value="heavily technical with focus on coding and system design">Technical deep-dive</option>
+                <option value="balanced mix of technical depth and behavioral questions" selected>Balanced</option>
+                <option value="behavioral focused on leadership and culture fit">Behavioral focused</option>
+              </select>
+            </div>
+            <div class="field"><label>Number of questions</label><input id="qNum" type="number" value="5" min="1" max="15" /></div>
+          </div>
+          <div class="row-actions">
+            <button class="btn" id="qGenerate">Generate Questions</button>
+          </div>
+          <div id="qList" style="margin-top:20px;"></div>
+          <div class="wizard-actions">
+            <div class="left">
+              <button class="btn ghost" data-back="1">← Back</button>
+            </div>
+            <div class="right">
+              <button class="btn" id="qNext" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 3: Audio / answers per question -->
+        <div class="wizard-stage" data-stage="3">
+          <div class="result-block" style="margin-top:0;">
+            <h4>Capture answers</h4>
+            <p style="margin-top:0; color:var(--muted); font-size:14px;">
+              For each question, upload an audio recording of the candidate's answer
+              (transcribed via <code>transcriptions_pro.py</code>) — or paste a transcript
+              if you don't have audio handy.
+            </p>
+          </div>
+          <div id="answerList" style="margin-top:18px;"></div>
+          <div class="wizard-actions">
+            <div class="left">
+              <button class="btn ghost" data-back="2">← Back</button>
+            </div>
+            <div class="right">
+              <button class="btn" id="aNext">Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 4: Scoring -->
+        <div class="wizard-stage" data-stage="4">
+          <div class="result-block" style="margin-top:0;">
+            <h4>Score the session</h4>
+            <p style="margin-top:0; color:var(--muted); font-size:14px;">
+              Each answer is scored on technical accuracy, depth, relevance, clarity and
+              AI-likeness via <code>score.py</code>, then rolled up into a candidate-level
+              verdict by <code>aggregrate.py</code>.
+            </p>
+          </div>
+          <div class="row-actions" style="justify-content:center; margin-top:24px;">
+            <button class="btn lg" id="scoreRun">Run Scoring Pipeline</button>
+          </div>
+          <div id="scoreResults" style="display:none; margin-top:24px;"></div>
+          <div class="wizard-actions">
+            <div class="left">
+              <button class="btn ghost" data-back="3">← Back</button>
+            </div>
+            <div class="right">
+              <button class="btn" id="sNext" disabled>Next →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAGE 5: Report -->
+        <div class="wizard-stage" data-stage="5">
+          <div class="result-block" style="margin-top:0;">
+            <h4>Recruiter report</h4>
+            <p style="margin-top:0; color:var(--muted); font-size:14px;">
+              Print-friendly HTML report assembled by <code>Interview pipeline.py</code> &
+              <code>interview_report.py</code>. Use the buttons on the bottom-right to view
+              or download.
+            </p>
+          </div>
+          <div id="reportPreview" style="margin-top:18px;"></div>
+          <div class="wizard-actions">
+            <div class="left">
+              <button class="btn ghost" data-back="4">← Back</button>
+              <button class="btn ghost" id="newCandidate">New Candidate</button>
+            </div>
+            <div class="right">
+              <button class="btn ghost" id="reportView" disabled>View Report</button>
+              <button class="btn" id="reportDownload" disabled>Download Report</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ───── CANDIDATE REVIEW ───── -->
+      <div id="review" class="service-card">
+        <div class="head">
+          <div class="meta">
+            <div class="pill">Service 04</div>
+            <div>Cohort comparison + optional fairness audit.</div>
+            <div class="stack">// fairness.py</div>
+          </div>
+          <div class="right">
+            <h3>Candidate Review</h3>
+            <p>
+              Upload candidate reports (the JSON files saved from <em>Process Candidates</em>,
+              or a CSV with <code>candidate_id, gender, recommendation, overall_score</code>).
+              Compare them on a single dashboard, and optionally run a cohort-level
+              <strong>fairness audit</strong> using <code>fairness.py</code>.
+            </p>
+          </div>
+        </div>
+
+        <label class="upload-zone" id="cohortUpload">
+          <div class="ico">📊</div>
+          <div class="label">Drop multiple report files (.json or .csv)</div>
+          <div class="hint">click to select multiple</div>
+          <input type="file" accept=".json,.csv" id="cohortFiles" multiple />
+        </label>
+        <div id="cohortFileList" style="margin-top:14px;"></div>
+
+        <div class="form-grid" style="margin-top:18px;">
+          <div class="field" style="display:flex; align-items:center; gap:10px;">
+            <input type="checkbox" id="fairnessToggle" style="width:auto;" />
+            <label for="fairnessToggle" style="margin:0; font-size:14px; text-transform:none; letter-spacing:normal; font-weight:500; color:var(--ink);">
+              Run fairness audit (fairness.py)
+            </label>
+          </div>
+          <div class="field"><label>Protected attribute</label><input id="protectedAttr" value="gender" /></div>
+        </div>
+
+        <div class="row-actions">
+          <button class="btn ghost" id="cohortReset">Reset</button>
+          <button class="btn" id="cohortRun">Generate Dashboard</button>
+        </div>
+
+        <div id="cohortResults" style="display:none; margin-top:24px;"></div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    Made with care · <span class="brand">HireMatrix</span> · Hiring driven by skill, not bias.
+  </footer>
+
+  <div class="toast-container" id="toasts"></div>
+
+  <script src="config.js"></script>
+  <script src="static/chart.min.js"></script>
+  <script src="static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "hirematrix-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "build": "node scripts/build.js"
+  }
+}

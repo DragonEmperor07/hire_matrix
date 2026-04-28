@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Runtime uploads and generated output
+audio/
+uploads/
+reports/
+resumes/
+catboost_info/
+
+# Model/cache files
+*.pt
+.cache/
